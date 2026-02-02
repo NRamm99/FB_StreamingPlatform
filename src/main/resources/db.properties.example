@@ -1,0 +1,3 @@
+db.url = jdbc:mysql://localhost:3306/streaming_tjeneste_db
+db.user = root
+db.password = INDSÆT PASSWORD HER
