@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.streaming.fb_streamingplatform/com.streaming.fb_streamingplatform.HelloApplication
+                                com.streaming.fb_streamingplatform/com.streaming.fb_streamingplatform.ui.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

@@ -3,6 +3,6 @@ module com.streaming.fb_streamingplatform {
     requires javafx.fxml;
 
 
-    opens com.streaming.fb_streamingplatform to javafx.fxml;
-    exports com.streaming.fb_streamingplatform;
+    exports com.streaming.fb_streamingplatform.ui;
+    opens com.streaming.fb_streamingplatform.ui to javafx.fxml;
 }
