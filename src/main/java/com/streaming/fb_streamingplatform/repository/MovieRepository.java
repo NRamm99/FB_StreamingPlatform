@@ -30,6 +30,13 @@ public class MovieRepository {
         }
     }
 
+    private Movie mapMovie(ResultSet rs) throws SQLException {
+        return new Movie(
+                rs.getInt("id"),
+                rs.getString("title"),
+                rs.getDouble("rating"));
+    }
+
     public List<Movie> getMovies() throws SQLException {
         List<Movie> movies = new ArrayList<>();
         Movie temp;
@@ -41,8 +48,7 @@ public class MovieRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                temp = new Movie(rs.getInt("id"), rs.getString("title"), rs.getDouble("rating"));
-                movies.add(temp);
+                movies.add(mapMovie(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
