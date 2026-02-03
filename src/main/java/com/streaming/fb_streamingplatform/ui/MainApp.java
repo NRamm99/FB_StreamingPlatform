@@ -14,6 +14,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 800 , 600);
         stage.setTitle("Best streaming platform in the world");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 }
