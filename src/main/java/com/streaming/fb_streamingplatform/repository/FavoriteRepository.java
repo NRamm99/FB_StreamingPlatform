@@ -67,4 +67,18 @@ public class FavoriteRepository {
             throw new SQLException(e);
         }
     }
+
+    public void remove(int userId, int movieId) throws SQLException {
+        String sql ="DELETE FROM favorites WHERE user_id = ? AND movie_id = ?;";
+
+        try (var conn = config.getConnection();
+        var stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, userId);
+            stmt.setInt(2, movieId);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

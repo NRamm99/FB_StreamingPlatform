@@ -50,11 +50,36 @@ public class StreamingService {
         // Check if user already have that favorite movie
         List<Movie> favMovies = favoriteRepository.getFavoritesByUserId(userId);
 
-            for(Movie mov : favMovies) {
-                if (mov.getId() == movieId) {
-                    throw new Exception("Movie is already favorite");
-                }
+        for (Movie mov : favMovies) {
+            if (mov.getId() == movieId) {
+                throw new Exception("Movie is already favorite");
             }
+        }
         favoriteRepository.add(userId, movieId);
+    }
+
+    public void removeFavorite(int userId, int movieId) throws Exception {
+        // check if user exists
+        if (userRepository.getByUserId(userId).isEmpty()) {
+            throw new Exception("User with that ID does not exist");
+        }
+
+        // Check if movie exists
+        if (movieRepository.getByMovieId(movieId).isEmpty()) {
+            throw new Exception("Movie with that ID does not exist");
+        }
+
+        // Check if user already have that favorite movie
+        List<Movie> favMovies = favoriteRepository.getFavoritesByUserId(userId);
+
+        for (Movie mov : favMovies) {
+            if (mov.getId() == movieId) {
+                favoriteRepository.remove(userId, movieId);
+                return;
+            }
+        }
+
+        throw new Exception("The user does not have the selected movie as a favorite.");
+
     }
 }
