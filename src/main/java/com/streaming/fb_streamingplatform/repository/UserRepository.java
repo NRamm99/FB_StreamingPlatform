@@ -36,4 +36,20 @@ public class UserRepository {
         return Optional.empty();
     }
 
+    public Optional<User> getByUserId(int userId) throws SQLException {
+        String sql = "SELECT id, email, name FROM users WHERE id = ?;";
+
+        try (var conn = config.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapUser(rs);
+            }
+        }
+        return Optional.empty();
+    }
+
 }

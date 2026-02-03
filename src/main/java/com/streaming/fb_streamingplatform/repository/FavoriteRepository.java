@@ -50,4 +50,21 @@ public class FavoriteRepository {
 
         return favorites;
     }
+
+    public void add(int userId, int movieId) throws SQLException {
+        String sql = """
+                INSERT INTO favorites (user_id, movie_id)
+                VALUES (?, ?);
+                """;
+
+        try (var conn = config.getConnection();
+        var stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, movieId);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+    }
 }
