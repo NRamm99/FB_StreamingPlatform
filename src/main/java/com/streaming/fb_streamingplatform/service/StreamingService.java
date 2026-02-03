@@ -24,6 +24,9 @@ public class StreamingService {
         this.movieRepository = new MovieRepository(config);
     }
 
+
+    // USER
+
     public Optional<User> findUserByEmail(String email) {
         if ((email == null) || (email.isBlank()) || (!email.contains("@"))) {
             return Optional.empty();
@@ -35,6 +38,23 @@ public class StreamingService {
             throw new RuntimeException("Failed to fetch user by email", e);
         }
     }
+
+    public void addUser(String email, String name) throws SQLException {
+        // check if email is empty
+        if (email.trim().isEmpty()) {
+            throw new RuntimeException("The email is empty. Please provide your email.");
+        }
+
+        // Check if there is an @ in the string
+        if (!email.contains("@")) {
+            throw new RuntimeException("The email does not contain an '@' and is therefore not valid.");
+        }
+
+        userRepository.add(email, name);
+    }
+
+
+    // FAVORITE
 
     public void addFavorite(int userId, int movieId) throws Exception {
         // Check if user exists
