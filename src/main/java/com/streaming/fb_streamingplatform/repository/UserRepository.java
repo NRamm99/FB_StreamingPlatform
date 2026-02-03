@@ -52,4 +52,23 @@ public class UserRepository {
         return Optional.empty();
     }
 
+    public void add(String email, String name) throws SQLException {
+        String sql = """
+                INSERT INTO users (email, name)
+                VALUES (?, ?);
+                """;
+
+        try (var conn = config.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            stmt.setString(2, name);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+
+    }
+
 }
