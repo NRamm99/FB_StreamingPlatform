@@ -8,6 +8,7 @@ import com.streaming.fb_streamingplatform.repository.MovieRepository;
 import com.streaming.fb_streamingplatform.repository.UserRepository;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,9 @@ public class StreamingService {
         this.movieRepository = new MovieRepository(config);
     }
 
+
+    // USER
+
     public Optional<User> findUserByEmail(String email) {
         if ((email == null) || (email.isBlank()) || (!email.contains("@"))) {
             return Optional.empty();
@@ -35,6 +39,23 @@ public class StreamingService {
             throw new RuntimeException("Failed to fetch user by email", e);
         }
     }
+
+    public void addUser(String email, String name) throws SQLException {
+        // check if email is empty
+        if (email.trim().isEmpty()) {
+            throw new RuntimeException("The email is empty. Please provide your email.");
+        }
+
+        // Check if there is an @ in the string
+        if (!email.contains("@")) {
+            throw new RuntimeException("The email does not contain an '@' and is therefore not valid.");
+        }
+
+        userRepository.add(email, name);
+    }
+
+
+    // FAVORITE
 
     public void addFavorite(int userId, int movieId) throws Exception {
         // Check if user exists
@@ -50,11 +71,11 @@ public class StreamingService {
         // Check if user already have that favorite movie
         List<Movie> favMovies = favoriteRepository.getFavoritesByUserId(userId);
 
-            for(Movie mov : favMovies) {
-                if (mov.getId() == movieId) {
-                    throw new Exception("Movie is already favorite");
-                }
+        for (Movie mov : favMovies) {
+            if (mov.getId() == movieId) {
+                throw new Exception("Movie is already favorite");
             }
+        }
         favoriteRepository.add(userId, movieId);
     }
 
@@ -64,6 +85,52 @@ public class StreamingService {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch movies sorted by rating", e);
         }
+      
         // TODO check if list is empty
+    public void removeFavorite(int userId, int movieId) throws Exception {
+        // check if user exists
+        if (userRepository.getByUserId(userId).isEmpty()) {
+            throw new Exception("User with that ID does not exist");
+        }
+
+        // Check if movie exists
+        if (movieRepository.getByMovieId(movieId).isEmpty()) {
+            throw new Exception("Movie with that ID does not exist");
+        }
+
+        // Check if user already have that favorite movie
+        List<Movie> favMovies = favoriteRepository.getFavoritesByUserId(userId);
+
+        for (Movie mov : favMovies) {
+            if (mov.getId() == movieId) {
+                favoriteRepository.remove(userId, movieId);
+                return;
+            }
+        }
+
+        throw new Exception("The user does not have the selected movie as a favorite.");
+
+    }
+
+    public FavoritesResult findFavoritesByEmail(String email){
+
+        if (email == null || email.isBlank() || !email.contains("@")){
+            return new FavoritesResult(Collections.emptyList(), "Invalid email input");
+        }
+
+        Optional<User> userOpt = findUserByEmail(email.trim());
+
+        if (userOpt.isEmpty()){
+            return new FavoritesResult(Collections.emptyList(), "No user found");
+        }
+
+        List<Movie> favorites = favoriteRepository.getFavoritesByUserId(userOpt.get().getId());
+
+        if (favorites.isEmpty()){
+            return new FavoritesResult(Collections.emptyList(), "No favorites");
+
+        }
+
+        return new FavoritesResult(favorites, "Loaded " + favorites.size() + " favorites");
     }
 }
