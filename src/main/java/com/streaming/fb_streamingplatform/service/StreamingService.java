@@ -8,6 +8,7 @@ import com.streaming.fb_streamingplatform.repository.MovieRepository;
 import com.streaming.fb_streamingplatform.repository.UserRepository;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,5 +102,27 @@ public class StreamingService {
 
         throw new Exception("The user does not have the selected movie as a favorite.");
 
+    }
+
+    public FavoritesResult findFavoritesByEmail(String email){
+
+        if (email == null || email.isBlank() || !email.contains("@")){
+            return new FavoritesResult(Collections.emptyList(), "Invalid email input");
+        }
+
+        Optional<User> userOpt = findUserByEmail(email.trim());
+
+        if (userOpt.isEmpty()){
+            return new FavoritesResult(Collections.emptyList(), "No user found");
+        }
+
+        List<Movie> favorites = favoriteRepository.getFavoritesByUserId(userOpt.get().getId());
+
+        if (favorites.isEmpty()){
+            return new FavoritesResult(Collections.emptyList(), "No favorites");
+
+        }
+
+        return new FavoritesResult(favorites, "Loaded " + favorites.size() + " favorites");
     }
 }
