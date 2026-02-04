@@ -57,4 +57,13 @@ public class StreamingService {
             }
         favoriteRepository.add(userId, movieId);
     }
+
+    public List<Movie> getMoviesSortedByRating() {
+        try {
+            return movieRepository.getMovieSortedByRating();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch movies sorted by rating", e);
+        }
+        // TODO check if list is empty
+    }
 }

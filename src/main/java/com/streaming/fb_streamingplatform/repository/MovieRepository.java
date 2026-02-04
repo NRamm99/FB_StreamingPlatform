@@ -74,4 +74,20 @@ public class MovieRepository {
         }
         return Optional.empty();
     }
+
+    public List<Movie> getMovieSortedByRating() throws SQLException {
+        List<Movie> movies = new ArrayList<>();
+
+        String sql = "SELECT id, title, rating FROM movies ORDER BY rating DESC";
+
+        try (var conn = config.getConnection();
+             var stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery())
+        {
+            while (rs.next()) {
+                mapMovie(rs).ifPresent(movies::add);
+            }
+        }
+        return movies;
+    }
 }
