@@ -79,6 +79,14 @@ public class StreamingService {
         favoriteRepository.add(userId, movieId);
     }
 
+    public List<Movie> getMoviesSortedByRating() {
+        try {
+            return movieRepository.getMovieSortedByRating();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch movies sorted by rating", e);
+        }
+      
+        // TODO check if list is empty
     public void removeFavorite(int userId, int movieId) throws Exception {
         // check if user exists
         if (userRepository.getByUserId(userId).isEmpty()) {
