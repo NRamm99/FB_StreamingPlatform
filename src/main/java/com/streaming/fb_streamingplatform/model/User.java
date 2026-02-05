@@ -25,6 +25,6 @@ public class User {
 
     @Override
     public String toString(){
-        return "#" + id + " | " + email + " | name: " + name;
+        return "#" + id + " | " + email + " | " + name;
     }
 }

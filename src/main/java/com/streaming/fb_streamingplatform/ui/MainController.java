@@ -48,48 +48,57 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        // Movie list init
+        // Bind lists
         movieListView.setItems(movies);
-        movies.addAll(movieService.getMovies());
-
-        // User list init
         userListView.setItems(users);
-        userListView.setPlaceholder(
-                new Label("No users found")
-        );
-        users.addAll(userService.getUsers());
-
-        // Favorite list init
         favoriteMovieListView.setItems(favorites);
-        // init placeholder in list view - This is our "status"
-        favoriteMovieListView.setPlaceholder(
-                new Label("Select a user to see favorites")
-        );
 
+        // Default placeholders
+        userListView.setPlaceholder(new Label("No users found"));
+        favoriteMovieListView.setPlaceholder(new Label("Select a user to see favorites"));
 
-        // Favorite list "listen for click"
+        // Load initial data safely (so app still opens if db is down)
+        try {
+            movies.setAll(movieService.getMovies());
+            users.setAll(userService.getUsers());
+        } catch (RuntimeException e) {
+            System.err.println("DB ERROR: " + e.getMessage());
+            showError("Could not connect to MySQL.\nIs the server running?");
+
+            // We do this so hthat the app will still run if the database is down
+            movies.clear();
+            users.clear();
+            favorites.clear();
+
+            // update placeholder while db is down
+            userListView.setPlaceholder(new Label("Could not load users (DB offline)"));
+            favoriteMovieListView.setPlaceholder(new Label("DB offline"));
+            return;
+        }
+
+        // User click: set active user + refresh favorites
         userListView.getSelectionModel().selectedItemProperty().addListener((obs, oldUser, newUser) -> {
-            if (newUser == null) return;
-            setActiveUser(newUser);
+            if (newUser != null) {
+                setActiveUser(newUser);
+            }
         });
 
-        // User search as-you-type (by email)
+        // Search as you type (email)
         userSearchField.textProperty().addListener((obs, oldText, newText) -> {
             try {
                 users.setAll(userService.searchUsersByEmail(newText));
 
-                //Placeholder uipdate
-                if (users.isEmpty()) {
-                    userListView.setPlaceholder(
-                            new Label("No users found")
-                    );
+                // placeholder only shows when list is empty
+                if (users.isEmpty() && newText != null && !newText.isBlank()) {
+                    userListView.setPlaceholder(new Label("No users found"));
                 }
-
             } catch (RuntimeException e) {
-                showError(e.getMessage());
+                showError("Something went wrong.");
+                System.err.println("ERROR: " + e.getMessage());
             }
         });
     }
+
 
     @FXML
     private void sortByRating() {
@@ -103,7 +112,8 @@ public class MainController {
             movies.clear();
             movies.addAll(movieService.searchMovies(movieSearchField.getText()));
         } catch (RuntimeException e) {
-            showError(e.getMessage());
+            showError("Something went wrong.");
+            System.err.println("ERROR: " + e.getMessage());
         }
     }
 
@@ -134,7 +144,8 @@ public class MainController {
             }
 
         } catch (RuntimeException e) {
-            showError(e.getMessage());
+            showError("That user does not exist.");
+            System.err.println("ERROR: " + e.getMessage());
         }
     }
 
@@ -161,7 +172,9 @@ public class MainController {
             favorites.setAll(favoriteService.getFavoritesByUserId(activeUser.getId()));
 
         } catch (Exception e) {
-            showError(e.getMessage());
+            showError("That user or movie does not exist.");
+            System.err.println("ERROR: " + e.getMessage());
+
         }
     }
 
@@ -195,7 +208,9 @@ public class MainController {
             }
 
         } catch (Exception e) {
-            showError(e.getMessage());
+            showError("That user, or favorite movie does not exist.");
+            System.err.println("ERROR: " + e.getMessage());
+
         }
     }
 
@@ -249,7 +264,8 @@ public class MainController {
                 users.setAll(userService.getUsers());
 
             } catch (Exception e) {
-                showError(e.getMessage());
+                showError("Something went wrong trying to create the user.");
+                System.err.println("ERROR: " + e.getMessage());
             }
         });
     }
@@ -270,6 +286,33 @@ public class MainController {
             users.setAll(userService.getUsers());
 
         } catch (Exception e) {
+            showError("The user was not found.");
+            System.err.println("ERROR: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void showTop5() {
+        try {
+            // Get top 5 (sorted by rating desc)
+            var top5 = movieService.getMoviesSortedByRating()
+                    .stream()
+                    .limit(5)
+                    .toList();
+
+            ListView<Movie> topListView = new ListView<>();
+            topListView.setItems(FXCollections.observableArrayList(top5));
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Top 5 Movies");
+            dialog.setHeaderText("Top 5 movies by rating");
+            dialog.getDialogPane().setContent(topListView);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.getDialogPane().setPrefSize(300, 225);
+
+            dialog.showAndWait();
+
+        } catch (RuntimeException e) {
             showError(e.getMessage());
         }
     }
