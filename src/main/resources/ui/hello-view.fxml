@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.streaming.fb_streamingplatform.ui.MainController">
    <children>
       <VBox alignment="CENTER" layoutX="12.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="431.0" prefWidth="243.0" spacing="5.0" AnchorPane.bottomAnchor="155.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="545.0" AnchorPane.topAnchor="14.0">
          <children>
@@ -23,8 +22,8 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <TextField promptText="Search" />
-            <ListView prefHeight="368.0" prefWidth="243.0" />
+            <TextField fx:id="userSearchField" promptText="Search" />
+            <ListView fx:id="userListView" prefHeight="368.0" prefWidth="243.0" />
             <HBox alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Button mnemonicParsing="false" prefWidth="35.0" text="+">
@@ -66,8 +65,14 @@
                   <Font size="29.0" />
                </font>
             </Label>
-            <TextField promptText="Search" />
-            <ListView prefHeight="200.0" prefWidth="424.0" />
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="403.0">
+               <children>
+                  <TextField fx:id="movieSearchField" prefHeight="25.0" prefWidth="263.0" promptText="Search movies by title" />
+                  <Button mnemonicParsing="false" onAction="#searchMovies" text="Search" />
+                  <Button mnemonicParsing="false" onAction="#sortByRating" prefHeight="25.0" prefWidth="89.0" text="Sort by rating" />
+               </children>
+            </HBox>
+            <ListView fx:id="movieListView" prefHeight="200.0" prefWidth="424.0" />
          </children>
       </VBox>
       <VBox alignment="CENTER" layoutX="336.0" layoutY="317.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="245.0" prefWidth="403.0" spacing="5.0">
@@ -81,10 +86,11 @@
                </font>
             </Label>
             <TextField promptText="Search" />
-            <ListView prefHeight="200.0" prefWidth="325.0" />
+            <ListView fx:id="favoriteMovieListView" prefHeight="200.0" prefWidth="325.0" />
          </children>
       </VBox>
-      <Button layoutX="746.0" layoutY="178.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="47.0" text="Fav" />
-      <Button layoutX="746.0" layoutY="440.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="47.0" text="-" />
+      <Button layoutX="746.0" layoutY="178.0" mnemonicParsing="false" onAction="#addFavorite" prefHeight="43.0" prefWidth="47.0" text="Fav" />
+      <Button layoutX="746.0" layoutY="440.0" mnemonicParsing="false" onAction="#removeFavorite" prefHeight="43.0" prefWidth="47.0" text="-" />
+      <Label fx:id="activeUserLabel" layoutX="336.0" layoutY="348.0" prefHeight="17.0" prefWidth="243.0" text="Active user:" />
    </children>
 </AnchorPane>

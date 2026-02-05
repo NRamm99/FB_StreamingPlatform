@@ -1,6 +1,7 @@
 package com.streaming.fb_streamingplatform.repository;
 
 import com.streaming.fb_streamingplatform.infrastructure.DatabaseConfig;
+import com.streaming.fb_streamingplatform.model.Favorite;
 import com.streaming.fb_streamingplatform.model.Movie;
 
 import java.sql.ResultSet;
@@ -81,4 +82,5 @@ public class FavoriteRepository {
             throw new RuntimeException(e);
         }
     }
+
 }

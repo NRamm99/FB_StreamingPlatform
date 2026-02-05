@@ -1,10 +1,13 @@
 package com.streaming.fb_streamingplatform.repository;
 
 import com.streaming.fb_streamingplatform.infrastructure.DatabaseConfig;
+import com.streaming.fb_streamingplatform.model.Movie;
 import com.streaming.fb_streamingplatform.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserRepository {
@@ -69,6 +72,26 @@ public class UserRepository {
             throw new SQLException(e);
         }
 
+    }
+
+    public List<User> getUsers() throws SQLException{
+        List<User> users = new ArrayList<>();
+        User temp;
+
+        String sql = "SELECT id, email, name FROM users";
+
+        try (var conn = config.getConnection();
+             var stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                mapUser(rs).ifPresent(users::add);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
     }
 
 }

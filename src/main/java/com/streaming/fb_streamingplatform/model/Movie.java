@@ -5,7 +5,7 @@ public class Movie {
     String title;
     double rating;
 
-    public Movie(int id, String title, double rating){
+    public Movie(int id, String title, double rating) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -25,6 +25,6 @@ public class Movie {
 
     @Override
     public String toString(){
-        return "#" + id + " | " + title + " | Rating: " + rating;
+        return "⭐ " + rating + " | " + title;
     }
 }
