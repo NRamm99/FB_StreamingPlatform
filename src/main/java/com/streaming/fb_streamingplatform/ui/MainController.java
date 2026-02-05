@@ -264,7 +264,7 @@ public class MainController {
                 users.setAll(userService.getUsers());
 
             } catch (Exception e) {
-                showError("Something went wrong trying to create the user.");
+                showError(e.getMessage());
                 System.err.println("ERROR: " + e.getMessage());
             }
         });

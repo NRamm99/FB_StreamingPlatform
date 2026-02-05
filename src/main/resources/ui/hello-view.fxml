@@ -85,7 +85,6 @@
                   <Font size="29.0" />
                </font>
             </Label>
-            <TextField promptText="Search" />
             <ListView fx:id="favoriteMovieListView" prefHeight="200.0" prefWidth="325.0" />
          </children>
       </VBox>
