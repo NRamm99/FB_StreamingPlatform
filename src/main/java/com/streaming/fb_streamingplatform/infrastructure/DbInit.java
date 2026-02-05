@@ -126,7 +126,6 @@ public class DbInit {
     private static void seedMovies(Connection conn) throws SQLException {
         String sql = "INSERT INTO movies (title, rating) VALUES (?, ?)";
 
-        // Ratings are realistic IMDb-like values with 1 decimal
         List<Object[]> movies = List.of(
                 new Object[]{"The Matrix (1999)", 8.7},
                 new Object[]{"Parasite (2019)", 8.5},
@@ -185,32 +184,21 @@ public class DbInit {
         WHERE u.email = ? AND m.title = ?
     """;
 
-        // Mix: some users have favorites, some have none
-        // (e.g. Sofie + Mathias have no favorites)
+
         List<String[]> favs = List.of(
-                // Mads (lots)
+
                 new String[]{"mads.nielsen@gmail.com", "The Dark Knight (2008)"},
                 new String[]{"mads.nielsen@gmail.com", "Inception (2010)"},
                 new String[]{"mads.nielsen@gmail.com", "Interstellar (2014)"},
-
-                // Emil (a couple)
                 new String[]{"emil.hansen@outlook.com", "The Matrix (1999)"},
                 new String[]{"emil.hansen@outlook.com", "Fight Club (1999)"},
-
-                // Freja (classics)
                 new String[]{"freja.larsen@gmail.com", "The Godfather (1972)"},
                 new String[]{"freja.larsen@gmail.com", "Goodfellas (1990)"},
-
-                // Oliver (war/drama)
                 new String[]{"oliver.pedersen@yahoo.com", "Saving Private Ryan (1998)"},
                 new String[]{"oliver.pedersen@yahoo.com", "Schindler's List (1993)"},
-
-                // Ida (international)
                 new String[]{"ida.sorensen@gmail.com", "Parasite (2019)"},
                 new String[]{"ida.sorensen@gmail.com", "Spirited Away (2001)"},
                 new String[]{"ida.sorensen@gmail.com", "City of God (2002)"},
-
-                // Noah (a few)
                 new String[]{"noah.kristensen@gmail.com", "Pulp Fiction (1994)"},
                 new String[]{"noah.kristensen@gmail.com", "The Departed (2006)"}
         );
@@ -235,7 +223,6 @@ public class DbInit {
         return fullUrl.substring(0, slash + 1);
     }
 
-    // Reflection-safe access (no changes to DatabaseConfig needed)
     private static String getUrl(DatabaseConfig c) {
         try {
             var f = DatabaseConfig.class.getDeclaredField("url");
