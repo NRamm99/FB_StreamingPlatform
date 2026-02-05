@@ -94,4 +94,17 @@ public class UserRepository {
         return users;
     }
 
+    public void removeUserById(int userId){
+        String sql ="DELETE FROM users WHERE id = ?";
+
+        try (var conn = config.getConnection();
+             var stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, userId);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

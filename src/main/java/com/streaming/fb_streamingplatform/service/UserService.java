@@ -44,6 +44,13 @@ public class UserService {
         userRepository.add(email, name);
     }
 
+    public void removeUserById(int userId){
+        if (getByUserId(userId).isEmpty()){
+            throw new RuntimeException("No user was found. (ID NOT FOUND)");
+        }
+        userRepository.removeUserById(userId);
+    }
+
     public Optional<User> getByUserId(int userId) {
         try {
             return userRepository.getByUserId(userId);
