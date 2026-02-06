@@ -1,4 +1,8 @@
-# ✅ Status / Tjekliste – Streamingplatform
+<img width="802" height="632" alt="java_0pIoqDs1b2" src="https://github.com/user-attachments/assets/9a2d7a74-89f4-4711-8166-908452524ca2" />
+
+# ✅ Status / Tjekliste 
+
+– Streamingplatform
 
 ## Milepæle
 
